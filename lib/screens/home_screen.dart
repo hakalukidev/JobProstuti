@@ -5,7 +5,6 @@ import '../widgets/play_store_button.dart';
 import '../widgets/call_button.dart';
 import '../widgets/phone_mockup.dart';
 import '../widgets/stat_card.dart';
-import '../widgets/feature_card.dart';
 import '../widgets/feature_slider.dart';
 import '../widgets/guideline_card.dart';
 import '../widgets/course_card.dart';

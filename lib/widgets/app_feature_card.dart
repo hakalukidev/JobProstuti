@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
 
 class AppFeatureCard extends StatefulWidget {
   final IconData icon;
