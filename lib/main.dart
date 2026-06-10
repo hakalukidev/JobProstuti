@@ -12,16 +12,28 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Job Prostuti',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Hind Siliguri',
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1a5ff3)),
-        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF064E3B),
+          primary: const Color(0xFF064E3B),
+          secondary: const Color(0xFF10B981),
+          surface: Colors.white,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF0FDF4),
         appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: false,
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Color(0xFF0f1e4a)),
-          titleTextStyle: TextStyle(color: Color(0xFF0f1e4a), fontSize: 18, fontWeight: FontWeight.w700),
+          backgroundColor: Color(0xFF022C22),
+          surfaceTintColor: Color(0xFF022C22),
+          iconTheme: IconThemeData(color: Colors.white),
+          titleTextStyle: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Hind Siliguri',
+          ),
         ),
         useMaterial3: true,
       ),

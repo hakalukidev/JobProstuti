@@ -6,53 +6,347 @@ class PhoneMockup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 260,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 30, offset: Offset(0, 10))],
+    return Container(
+      height: 550,
+      width: double.infinity,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // ── Right/Back Phone (Subject List) ──
+          Positioned(
+            right: 70, // Shifted left
+            top: 60,
+            child: PhoneFrame(
+              child: _SubjectListView(),
+            ),
+          ),
+          // ── Left/Front Phone (Main Dashboard) ──
+          Positioned(
+            left: -100, // Shifted left
+            top: 0,
+            child: PhoneFrame(
+              child: _DashboardView(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PhoneFrame extends StatelessWidget {
+  final Widget child;
+  final double width;
+  final double height;
+  const PhoneFrame({required this.child, this.width = 280, this.height = 500});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 30,
+            offset: const Offset(0, 15),
+          ),
+        ],
+        border: Border.all(color: Colors.white, width: 8),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(22),
+        child: Container(
+          color: const Color(0xFFF8F9FA),
+          child: child,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text('জব প্রস্তুতি', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                  Text('🔔', style: TextStyle(fontSize: 16)),
-                ],
+      ),
+    );
+  }
+}
+
+class _DashboardView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Bar
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'জব প্রস্তুতি',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black),
               ),
-              const SizedBox(height: 12),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(color: AppColors.blue, borderRadius: BorderRadius.circular(8)),
-                child: const Text('জব প্রস্তুতি | ৪৫ তম পরীক্ষা', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600)),
+              Icon(Icons.notifications_none_rounded, color: Colors.black),
+            ],
+          ),
+          const SizedBox(height: 20),
+          // Live Exam Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'লাইভ এক্সাম',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black),
               ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(border: Border.all(color: AppColors.border), borderRadius: BorderRadius.circular(8)),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('বাংলাদেশ বিষয়াবলী - ১০', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
-                        Text('প্রশ্ন ৩০ টি · ৭ মিনিট', style: TextStyle(color: AppColors.textMuted, fontSize: 10)),
-                      ],
-                    ),
-                    Text('⏱ 00:58:44', style: TextStyle(color: AppColors.blue, fontSize: 11, fontWeight: FontWeight.w600)),
-                  ],
-                ),
+              Text(
+                'সবগুলো',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.secondary),
               ),
             ],
           ),
-        ),
+          const SizedBox(height: 12),
+          // Main Live Exam Card
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: const BoxDecoration(
+                    color: AppColors.secondary,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Text(
+                        'জব প্রস্তুতি । ৪৫ তম বিসিএস',
+                        style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'বাংলাদেশ বিষয়াবলী - ১০',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                      ),
+                      const Text(
+                        'প্রশ্ন ২০ টি - ৭ মিনিট',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: const [
+                              Icon(Icons.timer_outlined, size: 14, color: Colors.red),
+                              SizedBox(width: 4),
+                              Text('00:58:44', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700, fontSize: 12)),
+                            ],
+                          ),
+                          const Text('5,200 already enrolled', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Routine Card
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'সম্মিলিত রুটিন এবং আর্কাইভ',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.secondary),
+                ),
+                Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Subject Test Card
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'বিষয়ভিত্তিক পরীক্ষা',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.secondary),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'বাংলা, ইংরেজি, গণিত, ভূগোল সহ আরও ১৩ টি বিষয়ে পরীক্ষা দিন।',
+                        style: TextStyle(fontSize: 10, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.school, size: 40, color: AppColors.secondary),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Personal Practice
+          const Text(
+            'ব্যক্তিগত অনুশীলন',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(child: _SmallCard(title: 'সামগ্রিক পরীক্ষা', icon: Icons.description_outlined, color: Colors.pink.shade100)),
+              const SizedBox(width: 12),
+              Expanded(child: _SmallCard(title: 'প্রশ্ন ব্যাংক', icon: Icons.chat_bubble_outline_rounded, color: Colors.purple.shade100)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SmallCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Color color;
+  const _SmallCard({required this.title, required this.icon, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(4)),
+            child: Icon(icon, size: 16, color: Colors.white),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SubjectListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'বিষয়ভিত্তিক পরীক্ষা',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black),
+          ),
+          const SizedBox(height: 16),
+          _SubjectItem(title: 'বাংলা', code: 'বাং', progress: 0.8),
+          _SubjectItem(title: 'ইংরেজি', code: 'ইং', progress: 0.6),
+          _SubjectItem(title: 'বাংলাদেশ বিষয়াবলী', code: 'বাবি', progress: 0.8),
+          _SubjectItem(title: 'আন্তর্জাতিক বিষয়াবলী', code: 'আবি', progress: 0.8),
+          _SubjectItem(title: 'ভূগোল', code: 'ভূ', progress: 0.6),
+          _SubjectItem(title: 'সাধারণ বিজ্ঞান', code: 'সাবি', progress: 0.6),
+        ],
+      ),
+    );
+  }
+}
+
+class _SubjectItem extends StatelessWidget {
+  final String title;
+  final String code;
+  final double progress;
+  const _SubjectItem({required this.title, required this.code, required this.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade100),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(4)),
+            child: Text(code, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.workspace_premium, size: 12, color: Colors.orange),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(2),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    backgroundColor: Colors.grey.shade100,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
+                    minHeight: 4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.chevron_right, size: 14, color: Colors.grey),
+          const SizedBox(width: 4),
+          Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+        ],
       ),
     );
   }

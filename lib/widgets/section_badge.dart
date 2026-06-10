@@ -8,21 +8,32 @@ class SectionBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.blue, width: 1.5),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFE0E7FF), // Light indigo/blue tint
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 7,
-            height: 7,
-            decoration: const BoxDecoration(color: AppColors.blue, shape: BoxShape.circle),
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: Color(0xFF4F46E5), // Indigo dot
+              shape: BoxShape.circle,
+            ),
           ),
-          const SizedBox(width: 6),
-          Text(title, style: const TextStyle(color: AppColors.blue, fontSize: 12, fontWeight: FontWeight.w600)),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              color: Color(0xFF4338CA),
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+            ),
+          ),
         ],
       ),
     );

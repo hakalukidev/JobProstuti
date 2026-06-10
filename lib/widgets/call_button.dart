@@ -6,12 +6,35 @@ class CallButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.white54, width: 1.5),
+        border: Border.all(color: Colors.white24, width: 1),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: const Text('📞 ০১৮৯৪-৪৪২৯৪৪', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Text(
+            'আমাদের কল করুন',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 11,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(height: 2),
+          Text(
+            '০১৮৯৪-৪৪২৯৪৪',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
