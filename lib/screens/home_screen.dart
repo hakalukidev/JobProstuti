@@ -9,18 +9,55 @@ import '../widgets/feature_slider.dart';
 import '../widgets/guideline_card.dart';
 import '../widgets/course_card.dart';
 import '../widgets/app_feature_card.dart';
-import '../widgets/pricing_card.dart';
+import '../widgets/pricing_slider.dart';
 import '../widgets/faq_item.dart';
 import '../widgets/payment_chip.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+  
+  // Section offsets - recalibrated for smoother landing
+  final double _heroOffset = 0;
+  final double _statsOffset = 700;
+  final double _featuresOffset = 1200;
+  final double _coursesOffset = 2100;
+  final double _appFeaturesOffset = 3400;
+  final double _guidelineOffset = 4200;
+  final double _pricingOffset = 5300;
+
+  void _scrollToSection(double offset) {
+    _scrollController.animateTo(
+      offset,
+      duration: const Duration(milliseconds: 1200), // Slightly slower for more "luxurious" feel
+      curve: Curves.easeOutQuart, // Smoother deceleration
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
+      body: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
+        child: CustomScrollView(
+          controller: _scrollController,
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          slivers: [
           // ── Navbar (SliverAppBar) ──────────────────────────────────────
           SliverAppBar(
             pinned: true,
@@ -36,15 +73,15 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(width: 32),
 
                 // ── Nav Links ─────────────────────────────────────────────
-                const _NavLink('হোম', isActive: true),
+                _NavLink('হোম', isActive: true, onTap: () => _scrollToSection(_heroOffset)),
                 const SizedBox(width: 24),
-                const _NavLink('ফিচার'),
+                _NavLink('ফিচার', onTap: () => _scrollToSection(_featuresOffset)),
                 const SizedBox(width: 24),
-                const _NavLink('প্যাকেজ প্ল্যান'),
+                _NavLink('প্যাকেজ প্ল্যান', onTap: () => _scrollToSection(_pricingOffset)),
                 const SizedBox(width: 24),
-                const _NavLink('ব্লগ'),
+                _NavLink('ব্লগ', onTap: () {}),
                 const SizedBox(width: 24),
-                const _NavLink('ডাউনলোড অ্যাপ'),
+                _NavLink('ডাউনলোড অ্যাপ', onTap: () => _scrollToSection(6500)),
 
                 const SizedBox(width: 32),
 
@@ -331,25 +368,37 @@ class HomeScreen extends StatelessWidget {
                     children: const [
                       Expanded(
                         child: CourseCard(
-                          imagePath: '',
+                          imagePath: 'assets/images/course_1.jpg',
                           title: 'বিসিএস প্রস্তুতি ১২০ দিন',
                           description: 'বিসিএস প্রস্তুতি ১২০ দিন কোর্সটি ডিজাইন করা হয়েছে পুরাতন বা নতুন সবাইকে সবার জন্য...',
+                          badge: '১২০ দিনের',
+                          bannerTopText: '১২০ দিনের',
+                          bannerTitle: 'বিসিএস প্রস্তুতি',
+                          bannerSubtitle: 'টপিক ভিত্তিক মডেল টেস্ট',
+                          bannerBadge: 'সর্বমোট ৬৮ টি পরীক্ষা',
                         ),
                       ),
                       SizedBox(width: 24),
                       Expanded(
                         child: CourseCard(
-                          imagePath: '',
-                          title: 'বিসিএস প্রস্তুতি ৬ মাস',
-                          description: 'চাকরির বা অনার্স ৩য় বর্ষ বা ফাইনাল ইয়ারের ছাত্র, তবে ‘বিসিএস প্রস্তুতি ৬ মাস’ কোর্সটি আপনার জন্যই।',
+                          imagePath: 'assets/images/course_5.jpg', // Re-mapping to match Teacher Reg content
+                          title: 'শিক্ষক নিবন্ধন প্রস্তুতি',
+                          description: 'বিগত বছরের শিক্ষক নিবন্ধন পরীক্ষার ব্যাখ্যা সহ সমাধান এবং পূর্ণাঙ্গ রুটিন মাফিক প্রস্তুতি।',
+                          badge: '১১ তম',
+                          bannerTopText: '১১ তম',
+                          bannerTitle: 'শিক্ষক নিবন্ধন প্রস্তুতি',
+                          bannerSubtitle: 'কলেজ, স্কুল পর্যায়ের মডেল টেস্ট',
                         ),
                       ),
                       SizedBox(width: 24),
                       Expanded(
                         child: CourseCard(
-                          imagePath: '',
+                          imagePath: 'assets/images/course_3.jpg',
                           title: 'প্রাইমারি প্রশ্ন ব্যাংক',
                           description: 'প্রাথমিক শিক্ষক নিয়োগ পরীক্ষার বিগত সকল বছরের ব্যাখ্যা সহ প্রশ্নে সাজানো প্রাইমারি প্রশ্ন ব্যাংক কোর্স।',
+                          bannerTopText: 'বিগত বছরের',
+                          bannerTitle: 'প্রাইমারি প্রশ্ন ব্যাংক',
+                          bannerSubtitle: 'সকল প্রশ্নের সাথে বিস্তারিত ব্যাখ্যা',
                         ),
                       ),
                     ],
@@ -359,25 +408,33 @@ class HomeScreen extends StatelessWidget {
                     children: const [
                       Expanded(
                         child: CourseCard(
-                          imagePath: '',
+                          imagePath: 'assets/images/course_4.jpg',
+                          title: '৫০ নম্বরের ডেইলি টেস্ট',
+                          description: '২০০ নম্বরের আনুপাতিক হারে ২০ মিনিটেই হবে পূর্ণাঙ্গ প্রস্তুতি নিশ্চিত করুন।',
+                          bannerTitle: '৫০ নম্বরের',
+                          bannerSubtitle: 'ডেইলি মডেল টেস্ট',
+                        ),
+                      ),
+                      SizedBox(width: 24),
+                      Expanded(
+                        child: CourseCard(
+                          imagePath: 'assets/images/course_6.jpg',
                           title: 'ব্যাংক জব সলিউশন',
-                          description: 'ব্যাংক প্রিলি পরীক্ষার বিগত সকল বছরের ব্যাখ্যা সহ প্রশ্নে সাজানো ব্যাংক জব সলিউশন সেকশন।',
+                          description: 'ব্যাখ্যাসহ সকল ব্যাংক জব সমাধান এবং বিগত বছরের প্রশ্নপত্রের বিস্তারিত বিশ্লেষণ।',
+                          bannerTopText: 'ব্যাখ্যা সহ সকল',
+                          bannerTitle: 'ব্যাংক জব',
+                          bannerSubtitle: 'সলিউশন',
                         ),
                       ),
                       SizedBox(width: 24),
                       Expanded(
                         child: CourseCard(
-                          imagePath: '',
-                          title: 'সকল জব সলিউশন',
-                          description: 'ব্যাখ্যাসহ প্রতিদিন আপডেটেড জব সলিউশন মাসে মাসে জব সলিউশন কেনার দিন শেষ...',
-                        ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: CourseCard(
-                          imagePath: '',
-                          title: 'শিক্ষক নিবন্ধন (NTRCA) প্রস্তুতি | ৭০ দিন',
-                          description: 'কোর্সটি সাজানো হয়েছে যারা বছরব্যাপী শিক্ষক নিবন্ধন (NTRCA) এর প্রস্তুতি নিতে চাচ্ছে তাদের জন্য।',
+                          imagePath: 'assets/images/course_2.jpg',
+                          title: 'শিক্ষক নিবন্ধন (NTRCA)',
+                          description: 'কোর্সটি সাজানো হয়েছে যারা বছরব্যাপী শিক্ষক নিবন্ধন (NTRCA) এর প্রস্তুতি নিতে চাচ্ছে।',
+                          bannerTopText: 'বিগত বছরের',
+                          bannerTitle: 'শিক্ষক নিবন্ধন',
+                          bannerSubtitle: 'পরীক্ষার ব্যাখ্যা সহ সমাধান',
                         ),
                       ),
                     ],
@@ -480,7 +537,7 @@ class HomeScreen extends StatelessWidget {
           // ── Guideline Section ─────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: const Color(0xFF020617), // Near black navy for separation
+              color: AppColors.primaryDark, // FIXED: Changed from navy to App's Dark Green
               padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 80),
               child: Column(
                 children: [
@@ -533,18 +590,22 @@ class HomeScreen extends StatelessWidget {
                       Expanded(
                         child: GuidelineCard(
                           title: 'বিসিএস বাংলা গাইডলাইন',
-                          description: 'বাংলা ভাষা ও সাহিত্যের হিটম্যাপ বিশ্লেষণ, ৪৬ জন গুরুত্বপূর্ণ সাহিত্যিক ও প্রস্তুতি কৌশল।',
-                          tags: ['বাংলা ভাষা', 'সাহিত্য'],
+                          description: 'বাংলা ভাষা ও সাহিত্যের হিটম্যাপ বিশ্লেষণ, ৩৬ জন গুরুত্বপূর্ণ সাহিত্যিক ও প্রস্তুতি কৌশল।',
+                          tags: ['বাংলা ভাষা', 'সাহিত্য', 'হিটম্যাপ'],
                           imagePath: '',
+                          marks: '৩৫',
+                          accentColor: Colors.orange,
                         ),
                       ),
                       SizedBox(width: 24),
                       Expanded(
                         child: GuidelineCard(
                           title: 'বিসিএস ইংরেজি গাইডলাইন',
-                          description: 'English Language & Literature এর হিটম্যাপ, গুরুত্বপূর্ণ লেখক ও অধ্যায়ন কৌশল।',
-                          tags: ['English Language', 'Literature'],
+                          description: 'English Language & Literature-এর হিটম্যাপ, গুরুত্বপূর্ণ লেখক ও অধ্যয়ন কৌশল।',
+                          tags: ['English', 'Literature', 'Grammar'],
                           imagePath: '',
+                          marks: '৩৫',
+                          accentColor: Colors.blue,
                         ),
                       ),
                       SizedBox(width: 24),
@@ -554,6 +615,8 @@ class HomeScreen extends StatelessWidget {
                           description: 'ইতিহাস, সংবিধান ও সাম্প্রতিক বাংলাদেশের সম্পূর্ণ টপিকভিত্তিক হিটম্যাপ।',
                           tags: ['ইতিহাস', 'সংবিধান', 'মুক্তিযুদ্ধ', 'অর্থনীতি', 'সাম্প্রতিক'],
                           imagePath: '',
+                          marks: '৩০',
+                          accentColor: Colors.green,
                         ),
                       ),
                     ],
@@ -575,7 +638,7 @@ class HomeScreen extends StatelessWidget {
           // ── Pricing Section ───────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: const Color(0xFF0F172A), // Deep Navy Blue for separation
+              color: AppColors.primaryDark, // Professional Green Background
               padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 80),
               child: Column(
                 children: [
@@ -622,34 +685,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 60),
-                  Row(
-                    children: const [
-                      Expanded(
-                        child: PricingCard(
-                          title: '১ মাসের ফুল অ্যাপ এক্সেস',
-                          price: '৳১৪৯',
-                          description: '৩০ দিনের জন্য বিসিএস, ব্যাংক, প্রাইমারি, শিক্ষক নিবন্ধন (NTRCA) সহ আপ্প এর স...',
-                        ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: PricingCard(
-                          title: '৩ মাসের ফুল অ্যাপ এক্সেস',
-                          price: '৳২৯৯',
-                          description: '৯০ দিনের জন্য বিসিএস, ব্যাংক, প্রাইমারি, শিক্ষক নিবন্ধন (NTRCA) সহ আপ্প এর স...',
-                        ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: PricingCard(
-                          title: '৬ মাসের ফুল অ্যাপ এক্সেস',
-                          price: '৳৪৯৯',
-                          description: '১৮০ দিনের জন্য বিসিএস, ব্যাংক, প্রাইমারি, শিক্ষক নিবন্ধন (NTRCA) সহ আপ্প এর স...',
-                          isPopular: true,
-                        ),
-                      ),
-                    ],
-                  ),
+                  const PricingSlider(),
                 ],
               ),
             ),
@@ -690,32 +726,95 @@ class HomeScreen extends StatelessWidget {
           // ── CTA Section ───────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: AppColors.navyDark,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
+              color: const Color(0xFF010A1A), // Deep navy from image
+              padding: const EdgeInsets.only(top: 80, bottom: 0),
               child: Column(
                 children: [
-                  const SectionBadge(title: 'জব প্রস্তুতি অ্যাপ'),
-                  const SizedBox(height: 16),
+                  // Blue Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.blue.shade400, width: 1),
+                    ),
+                    child: const Text(
+                      'জব প্রস্তুতি অ্যাপ',
+                      style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   const Text(
                     'স্মার্ট প্রস্তুতি শুরু করুন আজই',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      fontFamily: 'Hind Siliguri',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
                   const Text(
                     'Download our mobile app, start learning from today',
-                    style: TextStyle(color: Colors.white60),
+                    style: TextStyle(color: Colors.white60, fontSize: 18),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      PlayStoreButton(),
-                      SizedBox(width: 12),
-                      CallButton(),
+                    children: [
+                      const PlayStoreButton(),
+                      const SizedBox(width: 16),
+                      // Phone Number Button
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1E293B).withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.white10),
+                        ),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.phone_in_talk_rounded, color: Colors.white70, size: 20),
+                            SizedBox(width: 12),
+                            Text(
+                              '০১৮৯৪-৪৪২৯৪৪',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
+                  const SizedBox(height: 60),
+                  // Overlapping Phone Mockups at bottom - FIXED: Increased height to accommodate taller frames
+                  SizedBox(
+                    height: 520,
+                    child: Stack(
+                      alignment: Alignment.topCenter,
+                      children: const [
+                        PhoneMockup(isCentered: true),
+                      ],
+                    ),
+                  ),
                 ],
+              ),
+            ),
+          ),
+
+          // Blue Divider Line
+          SliverToBoxAdapter(
+            child: Container(
+              height: 1,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.blue.withValues(alpha: 0),
+                    Colors.blue.withValues(alpha: 0.5),
+                    Colors.blue.withValues(alpha: 0),
+                  ],
+                ),
               ),
             ),
           ),
@@ -723,25 +822,119 @@ class HomeScreen extends StatelessWidget {
           // ── Footer ────────────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: AppColors.navy,
-              padding: const EdgeInsets.all(24),
+              color: const Color(0xFF010A1A),
+              padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 80),
               child: Column(
                 children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left Column: Logo and Contact
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const _JobProstutiLogo(),
+                            const SizedBox(height: 24),
+                            const Text(
+                              'জব প্রস্তুতির আস্থার সঙ্গী — ৯ লক্ষ+\nশিক্ষার্থীর বিশ্বাস',
+                              style: TextStyle(color: Colors.white70, fontSize: 14, height: 1.6),
+                            ),
+                            const SizedBox(height: 32),
+                            _FooterContactItem(icon: Icons.email_outlined, text: 'support@jobprostuti.com'),
+                            _FooterContactItem(icon: Icons.phone_android_outlined, text: '01894-442944'),
+                            _FooterContactItem(icon: Icons.location_on_outlined, text: '22-23 Station Road, Tejgaon,\nDhaka-1215'),
+                          ],
+                        ),
+                      ),
+                      
+                      // Middle Column 1: Links
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text('গুরুত্বপূর্ণ লিঙ্ক', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16)),
+                            SizedBox(height: 20),
+                            _FooterLink('About Us'),
+                            _FooterLink('Blog'),
+                            _FooterLink('FAQ'),
+                            _FooterLink('Packages'),
+                          ],
+                        ),
+                      ),
+
+                      // Middle Column 2: Policies
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text('নীতিমালা', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16)),
+                            SizedBox(height: 20),
+                            _FooterLink('Privacy Policy'),
+                            _FooterLink('Terms & Conditions'),
+                            _FooterLink('Refund Policy'),
+                          ],
+                        ),
+                      ),
+
+                      // Right Column: Download and Social
+                      Expanded(
+                        flex: 2,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('অ্যাপ ডাউনলোড', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 16)),
+                            const SizedBox(height: 20),
+                            const PlayStoreButton(),
+                            const SizedBox(height: 40),
+                            const Text('আমাদের অনুসরণ করুন', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 14)),
+                            const SizedBox(height: 16),
+                            Row(
+                              children: [
+                                _SocialIcon(Icons.facebook),
+                                const SizedBox(width: 12),
+                                _SocialIcon(Icons.group_rounded),
+                                const SizedBox(width: 12),
+                                _SocialIcon(Icons.chat_bubble_rounded),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 80),
+                  // Payment Partners
+                  const SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        PaymentChip(name: 'Visa'),
+                        PaymentChip(name: 'Mastercard'),
+                        PaymentChip(name: 'bKash'),
+                        PaymentChip(name: 'Nagad'),
+                        PaymentChip(name: 'Rocket'),
+                        PaymentChip(name: 'Upay'),
+                        PaymentChip(name: 'Mcash'),
+                        PaymentChip(name: 'SureCash'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  const Divider(color: Colors.white10),
+                  const SizedBox(height: 20),
                   const Text(
                     '© 2026 Job Prostuti. All rights reserved.',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 12),
+                    style: TextStyle(color: Colors.white38, fontSize: 12),
                   ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 8,
-                    children: const [
-                      PaymentChip(name: 'Visa'),
-                      PaymentChip(name: 'Mastercard'),
-                      PaymentChip(name: 'bKash'),
-                      PaymentChip(name: 'Nagad'),
-                      PaymentChip(name: 'Rocket'),
-                    ],
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Developed by Codeminers IT Limited',
+                    style: TextStyle(color: Colors.white24, fontSize: 11),
                   ),
                 ],
               ),
@@ -749,6 +942,58 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      )
+    );
+  }
+}
+
+class _FooterContactItem extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _FooterContactItem({required this.icon, required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: Colors.blue.shade400, size: 18),
+          const SizedBox(width: 12),
+          Text(text, style: const TextStyle(color: Colors.white60, fontSize: 13, height: 1.4)),
+        ],
+      ),
+    );
+  }
+}
+
+class _FooterLink extends StatelessWidget {
+  final String text;
+  const _FooterLink(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Text(text, style: const TextStyle(color: Colors.white60, fontSize: 14)),
+    );
+  }
+}
+
+class _SocialIcon extends StatelessWidget {
+  final IconData icon;
+  const _SocialIcon(this.icon);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(icon, color: Colors.white70, size: 20),
     );
   }
 }
@@ -838,16 +1083,23 @@ class _JobProstutiLogo extends StatelessWidget {
 class _NavLink extends StatelessWidget {
   final String label;
   final bool isActive;
-  const _NavLink(this.label, {this.isActive = false});
+  final VoidCallback onTap;
+  const _NavLink(this.label, {this.isActive = false, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: TextStyle(
-        fontSize: 14,
-        fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-        color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.8),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+            color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.8),
+          ),
+        ),
       ),
     );
   }

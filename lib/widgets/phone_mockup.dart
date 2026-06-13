@@ -2,29 +2,66 @@ import 'package:flutter/material.dart';
 import '../utils/app_colors.dart';
 
 class PhoneMockup extends StatelessWidget {
-  const PhoneMockup({super.key});
+  final bool isCentered;
+  const PhoneMockup({super.key, this.isCentered = false});
 
   @override
   Widget build(BuildContext context) {
+    if (isCentered) {
+      return SizedBox(
+        width: 500, // Increased width for better spacing
+        height: 600, // Increased height to prevent overflow
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // ── Back Phone (Subject List) ──
+            Positioned(
+              right: 20,
+              top: 80, // Lowered slightly
+              child: PhoneFrame(
+                width: 260,
+                height: 520, // Taller frame
+                child: _SubjectListView(),
+              ),
+            ),
+            // ── Front Phone (Main Dashboard) ──
+            Positioned(
+              left: 20,
+              top: 0,
+              child: PhoneFrame(
+                width: 260,
+                height: 520, // Taller frame
+                child: _DashboardView(),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
-      height: 550,
+      height: 600,
       width: double.infinity,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           // ── Right/Back Phone (Subject List) ──
           Positioned(
-            right: 70, // Shifted left
+            right: 70,
             top: 60,
             child: PhoneFrame(
+              width: 280,
+              height: 550,
               child: _SubjectListView(),
             ),
           ),
           // ── Left/Front Phone (Main Dashboard) ──
           Positioned(
-            left: -100, // Shifted left
+            left: -100,
             top: 0,
             child: PhoneFrame(
+              width: 280,
+              height: 550,
               child: _DashboardView(),
             ),
           ),
@@ -50,9 +87,9 @@ class PhoneFrame extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 30,
-            offset: const Offset(0, 15),
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 40,
+            offset: const Offset(0, 20),
           ),
         ],
         border: Border.all(color: Colors.white, width: 8),
@@ -72,6 +109,7 @@ class _DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,7 +189,9 @@ class _DashboardView extends StatelessWidget {
                               Text('00:58:44', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700, fontSize: 12)),
                             ],
                           ),
-                          const Text('5,200 already enrolled', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                          const Flexible(
+                            child: Text('5,200 already enrolled', style: TextStyle(fontSize: 9, color: Colors.grey), overflow: TextOverflow.ellipsis),
+                          ),
                         ],
                       ),
                     ],
@@ -270,7 +310,8 @@ class _SmallCard extends StatelessWidget {
 class _SubjectListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,9 +365,9 @@ class _SubjectItem extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                    Flexible(child: Text(title, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700), overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 4),
-                    const Icon(Icons.workspace_premium, size: 12, color: Colors.orange),
+                    const Icon(Icons.workspace_premium, size: 10, color: Colors.orange),
                   ],
                 ),
                 const SizedBox(height: 6),
@@ -342,10 +383,10 @@ class _SubjectItem extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
-          const Icon(Icons.chevron_right, size: 14, color: Colors.grey),
           const SizedBox(width: 4),
-          Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+          const Icon(Icons.chevron_right, size: 12, color: Colors.grey),
+          const SizedBox(width: 2),
+          Text('${(progress * 100).toInt()}%', style: const TextStyle(fontSize: 9, color: Colors.grey)),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
 
@@ -13,6 +14,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Job Prostuti',
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
+        dragDevices: {
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.touch,
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.stylus,
+        },
+        scrollbars: true,
+      ),
       theme: ThemeData(
         fontFamily: 'Hind Siliguri',
         colorScheme: ColorScheme.fromSeed(
@@ -36,6 +46,14 @@ class MyApp extends StatelessWidget {
           ),
         ),
         useMaterial3: true,
+        scrollbarTheme: ScrollbarThemeData(
+          thumbVisibility: WidgetStateProperty.all(true),
+          thickness: WidgetStateProperty.all(8),
+          thumbColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.3)),
+          radius: const Radius.circular(10),
+          minThumbLength: 50,
+          interactive: true,
+        ),
       ),
       home: const HomeScreen(),
     );
