@@ -25,18 +25,17 @@ class _HomeScreenState extends State<HomeScreen> {
   
   // Section offsets - recalibrated for smoother landing
   final double _heroOffset = 0;
-  final double _statsOffset = 700;
-  final double _featuresOffset = 1200;
-  final double _coursesOffset = 2100;
-  final double _appFeaturesOffset = 3400;
-  final double _guidelineOffset = 4200;
-  final double _pricingOffset = 5300;
+  final double _featuresOffset = 1300;
+  final double _coursesOffset = 2300;
+  final double _guidelineOffset = 4500;
+  final double _pricingOffset = 5800;
+  final double _ctaOffset = 7200;
 
   void _scrollToSection(double offset) {
     _scrollController.animateTo(
       offset,
-      duration: const Duration(milliseconds: 1200), // Slightly slower for more "luxurious" feel
-      curve: Curves.easeOutQuart, // Smoother deceleration
+      duration: const Duration(milliseconds: 1200),
+      curve: Curves.easeOutQuart,
     );
   }
 
@@ -66,7 +65,13 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Row(
               children: [
                 // ── Logo ──────────────────────────────────────────────────
-                const _JobProstutiLogo(),
+                GestureDetector(
+                  onTap: () => _scrollToSection(_heroOffset),
+                  child: const MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: _JobProstutiLogo(),
+                  ),
+                ),
 
                 const Spacer(),
 
@@ -77,11 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 24),
                 _NavLink('ফিচার', onTap: () => _scrollToSection(_featuresOffset)),
                 const SizedBox(width: 24),
+                _NavLink('কোর্স', onTap: () => _scrollToSection(_coursesOffset)),
+                const SizedBox(width: 24),
+                _NavLink('গাইডলাইন', onTap: () => _scrollToSection(_guidelineOffset)),
+                const SizedBox(width: 24),
                 _NavLink('প্যাকেজ প্ল্যান', onTap: () => _scrollToSection(_pricingOffset)),
                 const SizedBox(width: 24),
-                _NavLink('ব্লগ', onTap: () {}),
-                const SizedBox(width: 24),
-                _NavLink('ডাউনলোড অ্যাপ', onTap: () => _scrollToSection(6500)),
+                _NavLink('ডাউনলোড অ্যাপ', onTap: () => _scrollToSection(_ctaOffset)),
 
                 const SizedBox(width: 32),
 
@@ -727,7 +734,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SliverToBoxAdapter(
             child: Container(
               color: const Color(0xFF010A1A), // Deep navy from image
-              padding: const EdgeInsets.only(top: 80, bottom: 0),
+              padding: const EdgeInsets.only(top: 100, bottom: 0), // Increased top spacing
               child: Column(
                 children: [
                   // Blue Badge
@@ -743,7 +750,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
                   const Text(
                     'স্মার্ট প্রস্তুতি শুরু করুন আজই',
                     style: TextStyle(
@@ -759,7 +766,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     'Download our mobile app, start learning from today',
                     style: TextStyle(color: Colors.white60, fontSize: 18),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 48),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -786,8 +793,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 60),
-                  // Overlapping Phone Mockups at bottom - FIXED: Increased height to accommodate taller frames
+                  const SizedBox(height: 80), // Increased space before mockups
+                  // Overlapping Phone Mockups at bottom
                   SizedBox(
                     height: 520,
                     child: Stack(
@@ -802,18 +809,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Blue Divider Line
+          // Blue Divider Line - Moved lower with more vertical presence
           SliverToBoxAdapter(
             child: Container(
-              height: 1,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.blue.withValues(alpha: 0),
-                    Colors.blue.withValues(alpha: 0.5),
-                    Colors.blue.withValues(alpha: 0),
-                  ],
+              padding: const EdgeInsets.symmetric(vertical: 40),
+              color: const Color(0xFF010A1A),
+              child: Container(
+                height: 1.5,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.blue.withValues(alpha: 0),
+                      Colors.blue.withValues(alpha: 0.4),
+                      Colors.blue.withValues(alpha: 0),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -932,9 +943,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(color: Colors.white38, fontSize: 12),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Developed by Codeminers IT Limited',
-                    style: TextStyle(color: Colors.white24, fontSize: 11),
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () {}, // Link placeholder
+                      child: const Text(
+                        'Developed by hakaluki.dev',
+                        style: TextStyle(color: Colors.blueAccent, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ],
               ),
