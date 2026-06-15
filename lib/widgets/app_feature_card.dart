@@ -18,17 +18,12 @@ class _AppFeatureCardState extends State<AppFeatureCard> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = MediaQuery.sizeOf(context).width < 850;
-
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(
-          horizontal: 16, 
-          vertical: isMobile ? 16 : 24
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         decoration: BoxDecoration(
           color: _isHovered ? Colors.white : const Color(0xFFF0F7FF),
           borderRadius: BorderRadius.circular(10),

@@ -1,61 +1,58 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'app/app.dart';
+import 'core/services/notification_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
+
+  // Initialize Firebase
+  await Firebase.initializeApp();
+
+  // Initialize Hive for offline storage
+  await Hive.initFlutter();
+  await Hive.openBox('questions_cache');
+  await Hive.openBox('exams_cache');
+  await Hive.openBox('user_cache');
+
+  // Initialize SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
+
+  // Initialize Notifications
+  await NotificationService.initialize();
+
+  // System UI overlay style
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ],
+      child: const JobProstutiApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Job Prostuti',
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: const MaterialScrollBehavior().copyWith(
-        dragDevices: {
-          PointerDeviceKind.mouse,
-          PointerDeviceKind.touch,
-          PointerDeviceKind.trackpad,
-          PointerDeviceKind.stylus,
-        },
-        scrollbars: true,
-      ),
-      theme: ThemeData(
-        fontFamily: 'Hind Siliguri',
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF064E3B),
-          primary: const Color(0xFF064E3B),
-          secondary: const Color(0xFF10B981),
-          surface: Colors.white,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF0FDF4),
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          centerTitle: false,
-          backgroundColor: Color(0xFF022C22),
-          surfaceTintColor: Color(0xFF022C22),
-          iconTheme: IconThemeData(color: Colors.white),
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Hind Siliguri',
-          ),
-        ),
-        useMaterial3: true,
-        scrollbarTheme: ScrollbarThemeData(
-          thumbVisibility: WidgetStateProperty.all(true),
-          thickness: WidgetStateProperty.all(8),
-          thumbColor: WidgetStateProperty.all(Colors.white.withValues(alpha: 0.3)),
-          radius: const Radius.circular(10),
-          minThumbLength: 50,
-          interactive: true,
-        ),
-      ),
-      home: const HomeScreen(),
-    );
-  }
-}
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError('SharedPreferences not initialized');
+});

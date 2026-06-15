@@ -11,7 +11,7 @@ class FeatureSlider extends StatefulWidget {
 }
 
 class _FeatureSliderState extends State<FeatureSlider> {
-  PageController? _pageController;
+  final PageController _pageController = PageController(viewportFraction: 0.333);
   int _currentPage = 0;
   late Timer _timer;
   bool _isAutoPlaying = true;
@@ -78,8 +78,8 @@ class _FeatureSliderState extends State<FeatureSlider> {
       } else {
         _currentPage = 0;
       }
-      if (_pageController != null && _pageController!.hasClients) {
-        _pageController!.animateToPage(
+      if (_pageController.hasClients) {
+        _pageController.animateToPage(
           _currentPage,
           duration: const Duration(milliseconds: 1000),
           curve: Curves.easeInOutQuart,
@@ -91,24 +91,16 @@ class _FeatureSliderState extends State<FeatureSlider> {
   @override
   void dispose() {
     _timer.cancel();
-    _pageController?.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isMobile = MediaQuery.sizeOf(context).width < 850;
-    final double viewportFraction = isMobile ? 0.8 : (MediaQuery.sizeOf(context).width < 1100 ? 0.5 : 0.333);
-
-    if (_pageController == null || _pageController!.viewportFraction != viewportFraction) {
-      _pageController?.dispose();
-      _pageController = PageController(viewportFraction: viewportFraction, initialPage: _currentPage);
-    }
-
     return Column(
       children: [
         SizedBox(
-          height: isMobile ? 550 : 650, 
+          height: 650, 
           child: PageView.builder(
             controller: _pageController,
             physics: const BouncingScrollPhysics(),
@@ -125,7 +117,7 @@ class _FeatureSliderState extends State<FeatureSlider> {
                       _isAutoPlaying = false;
                       _currentPage = index;
                     });
-                    _pageController?.animateToPage(
+                    _pageController.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 600),
                       curve: Curves.easeOutCubic,
@@ -159,7 +151,7 @@ class _FeatureSliderState extends State<FeatureSlider> {
             return GestureDetector(
               onTap: () {
                 setState(() => _isAutoPlaying = false);
-                _pageController?.animateToPage(index,
+                _pageController.animateToPage(index, 
                     duration: const Duration(milliseconds: 600), 
                     curve: Curves.easeInOut);
                 Future.delayed(const Duration(seconds: 10), () {
@@ -289,7 +281,6 @@ class _FeatureSlideCardState extends State<_FeatureSlideCard> {
       case 'quiz': return SingleChildScrollView(child: _MockQuiz());
       case 'evaluation': return SingleChildScrollView(child: _MockEvaluation());
       case 'premium_paper': return SingleChildScrollView(child: _MockPremiumPaper());
-      case 'question_bank': return SingleChildScrollView(child: _MockQuestionBank());
       case 'lecture_notes': return SingleChildScrollView(child: _MockLectureNotes());
       case 'leaderboard': return SingleChildScrollView(child: _MockLeaderboard());
       default: return Container(color: Colors.white);
@@ -310,17 +301,17 @@ class _MockSubjectTest extends StatelessWidget {
         children: [
           const Row(children: [Icon(Icons.arrow_back, size: 14), SizedBox(width: 8), Text('বিষয়ভিত্তিক পরীক্ষা', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13))]),
           const SizedBox(height: 16),
-          _subjectItem('বাং', 'বাংলা', Colors.blue.shade50, Colors.blue, hasCrown: true),
-          _subjectItem('ইং', 'ইংরেজি', Colors.red.shade50, Colors.red, hasCrown: true),
-          _subjectItem('বাবি', 'বাংলাদেশ বিষয়াবলী', Colors.green.shade50, Colors.green),
-          _subjectItem('আবি', 'আন্তর্জাতিক বিষয়াবলী', Colors.purple.shade50, Colors.purple),
-          _subjectItem('ভূ', 'ভূগোল', Colors.cyan.shade50, Colors.cyan),
+          _SubjectItem('বাং', 'বাংলা', Colors.blue.shade50, Colors.blue, hasCrown: true),
+          _SubjectItem('ইং', 'ইংরেজি', Colors.red.shade50, Colors.red, hasCrown: true),
+          _SubjectItem('বাবি', 'বাংলাদেশ বিষয়াবলী', Colors.green.shade50, Colors.green),
+          _SubjectItem('আবি', 'আন্তর্জাতিক বিষয়াবলী', Colors.purple.shade50, Colors.purple),
+          _SubjectItem('ভূ', 'ভূগোল', Colors.cyan.shade50, Colors.cyan),
         ],
       ),
     );
   }
 
-  Widget _subjectItem(String code, String title, Color bgColor, Color textColor, {bool hasCrown = false}) {
+  Widget _SubjectItem(String code, String title, Color bgColor, Color textColor, {bool hasCrown = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(6),
@@ -449,16 +440,16 @@ class _MockQuiz extends StatelessWidget {
           const SizedBox(height: 16),
           const Flexible(child: Text('বাংলাদেশের রাজধানী নিম্নের কোনটি?', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12), maxLines: 2, overflow: TextOverflow.ellipsis)),
           const SizedBox(height: 12),
-          _quizOption('ঢাকা', isSelected: true),
-          _quizOption('বরিশাল'),
-          _quizOption('খুলনা'),
-          _quizOption('সিলেট'),
+          _QuizOption('ঢাকা', isSelected: true),
+          _QuizOption('বরিশাল'),
+          _QuizOption('খুলনা'),
+          _QuizOption('সিলেট'),
         ],
       ),
     );
   }
 
-  Widget _quizOption(String text, {bool isSelected = false}) {
+  Widget _QuizOption(String text, {bool isSelected = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 6),
       width: double.infinity,
@@ -495,7 +486,7 @@ class _MockEvaluation extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
-              boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
+              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
             ),
             child: Column(
               children: [
@@ -504,11 +495,11 @@ class _MockEvaluation extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _statItem('পরীক্ষার্থী', '872'),
-                    _statItem('উত্তীর্ণ', '89', sub: '[10%]'),
-                    _statItem('পজিশন', '10', hasCheck: true),
-                    _statItem('কাট মার্ক', '118.0'),
-                    _statItem('সর্বোচ্চ', '156.0'),
+                    _StatItem('পরীক্ষার্থী', '872'),
+                    _StatItem('উত্তীর্ণ', '89', sub: '[10%]'),
+                    _StatItem('পজিশন', '10', hasCheck: true),
+                    _StatItem('কাট মার্ক', '118.0'),
+                    _StatItem('সর্বোচ্চ', '156.0'),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -524,9 +515,9 @@ class _MockEvaluation extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                _resultRow('ফলাফল', '200', '157', '34', '140.0', '78%', '17%', '70%'),
-                _resultRow('আন্তর্জাতিক', '20', '17', '2', '16.00', '85%', '10%', '80%'),
-                _resultRow('বাংলাদেশ', '30', '25', '5', '22.50', '83%', '17%', '75%'),
+                _ResultRow('ফলাফল', '200', '157', '34', '140.0', '78%', '17%', '70%'),
+                _ResultRow('আন্তর্জাতিক', '20', '17', '2', '16.00', '85%', '10%', '80%'),
+                _ResultRow('বাংলাদেশ', '30', '25', '5', '22.50', '83%', '17%', '75%'),
               ],
             ),
           )
@@ -534,7 +525,7 @@ class _MockEvaluation extends StatelessWidget {
     );
   }
 
-  Widget _statItem(String label, String value, {String? sub, bool hasCheck = false}) {
+  Widget _StatItem(String label, String value, {String? sub, bool hasCheck = false}) {
     return Column(
       children: [
         Text(label, style: const TextStyle(fontSize: 5, color: Colors.grey, fontWeight: FontWeight.bold)),
@@ -551,7 +542,7 @@ class _MockEvaluation extends StatelessWidget {
     );
   }
 
-  Widget _resultRow(String title, String total, String correct, String wrong, String marks, String pCorrect, String pWrong, String pMarks) {
+  Widget _ResultRow(String title, String total, String correct, String wrong, String marks, String pCorrect, String pWrong, String pMarks) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -578,17 +569,17 @@ class _MockLectureNotes extends StatelessWidget {
         children: [
           const Row(children: [Icon(Icons.arrow_back, size: 14), SizedBox(width: 8), Text('লেকচার এন্ড নোটস', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13))]),
           const SizedBox(height: 16),
-          _noteItem('High Frequency Vocabulary', '18 Mar 2024'),
-          _noteItem('BCS Guideline', '02 Jan 2024'),
-          _noteItem('Routine (PDF)', '18 Apr 2024'),
-          _noteItem('46 BCS Final Model Test PDF', '19 Apr 2024'),
-          _noteItem('Daily Star Editorial', '19 Apr 2024'),
+          _NoteItem('High Frequency Vocabulary', '18 Mar 2024'),
+          _NoteItem('BCS Guideline', '02 Jan 2024'),
+          _NoteItem('Routine (PDF)', '18 Apr 2024'),
+          _NoteItem('46 BCS Final Model Test PDF', '19 Apr 2024'),
+          _NoteItem('Daily Star Editorial', '19 Apr 2024'),
         ],
       ),
     );
   }
 
-  Widget _noteItem(String title, String updateDate) {
+  Widget _NoteItem(String title, String updateDate) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -652,12 +643,12 @@ class _MockCategories extends StatelessWidget {
             crossAxisSpacing: 6,
             childAspectRatio: 2.2,
             children: [
-              _categoryItem('বিসিএস', Colors.red.shade50, Colors.red),
-              _categoryItem('ব্যাংক', Colors.green.shade50, Colors.green),
-              _categoryItem('প্রাইমারি', Colors.orange.shade50, Colors.orange),
-              _categoryItem('জব সলিউশন', Colors.blue.shade50, Colors.blue),
-              _categoryItem('শিক্ষক নিয়োগ', Colors.purple.shade50, Colors.purple),
-              _categoryItem('PSC & Others', Colors.teal.shade50, Colors.teal),
+              _CategoryItem('বিসিএস', Colors.red.shade50, Colors.red),
+              _CategoryItem('ব্যাংক', Colors.green.shade50, Colors.green),
+              _CategoryItem('প্রাইমারি', Colors.orange.shade50, Colors.orange),
+              _CategoryItem('জব সলিউশন', Colors.blue.shade50, Colors.blue),
+              _CategoryItem('শিক্ষক নিয়োগ', Colors.purple.shade50, Colors.purple),
+              _CategoryItem('PSC & Others', Colors.teal.shade50, Colors.teal),
             ],
           ),
           const SizedBox(height: 12),
@@ -690,7 +681,7 @@ class _MockCategories extends StatelessWidget {
     );
   }
 
-  Widget _categoryItem(String title, Color bgColor, Color iconColor) {
+  Widget _CategoryItem(String title, Color bgColor, Color iconColor) {
     return Container(
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.grey.shade100)),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -718,10 +709,10 @@ class _MockPremiumPaper extends StatelessWidget {
           const SizedBox(height: 16),
           const Text('১০) জসীমউদ্দীনের শ্রেষ্ঠ কাহিনী কাব্য কোনটি?', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Colors.black)),
           const SizedBox(height: 12),
-          _optionItem('ক) নকশী কাঁথার মাঠ', isCorrect: true),
-          _optionItem('খ) সোজন বাদিয়ার ঘাট'),
-          _optionItem('গ) সকিনা'),
-          _optionItem('ঘ) রাখালী'),
+          _OptionItem('ক) নকশী কাঁথার মাঠ', isCorrect: true),
+          _OptionItem('খ) সোজন বাদিয়ার ঘাট'),
+          _OptionItem('গ) সকিনা'),
+          _OptionItem('ঘ) রাখালী'),
           const SizedBox(height: 12),
           Stack(
             children: [
@@ -749,7 +740,7 @@ class _MockPremiumPaper extends StatelessWidget {
     );
   }
 
-  Widget _optionItem(String text, {bool isCorrect = false}) {
+  Widget _OptionItem(String text, {bool isCorrect = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -785,7 +776,7 @@ class _MockQuestionBank extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade100)),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(t, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)), const Icon(Icons.chevron_right, size: 14, color: Colors.grey)]),
-          )),
+          )).toList(),
         ],
       ),
     );
@@ -805,17 +796,17 @@ class _MockLeaderboard extends StatelessWidget {
           const SizedBox(height: 8),
           const Text('সর্বমোট নাম্বার: ২০  |  পরীক্ষার্থী: ১২০  |  পাস: ৮০', style: TextStyle(fontSize: 10, color: Colors.black54, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
-          _leaderboardItem('Meraj', '1st', Colors.purple, isMe: false),
-          _leaderboardItem('Hasan (you)', '2nd', Colors.blue, isMe: true),
-          _leaderboardItem('Rahat', '3rd', Colors.blue.shade200, isMe: false),
-          _leaderboardItem('Anis', '4th', Colors.transparent, isMe: false),
-          _leaderboardItem('Sabbir', '4th', Colors.transparent, isMe: false),
+          _LeaderboardItem('Meraj', '1st', Colors.purple, isMe: false),
+          _LeaderboardItem('Hasan (you)', '2nd', Colors.blue, isMe: true),
+          _LeaderboardItem('Rahat', '3rd', Colors.blue.shade200, isMe: false),
+          _LeaderboardItem('Anis', '4th', Colors.transparent, isMe: false),
+          _LeaderboardItem('Sabbir', '4th', Colors.transparent, isMe: false),
         ],
       ),
     );
   }
 
-  Widget _leaderboardItem(String name, String rank, Color badgeColor, {required bool isMe}) {
+  Widget _LeaderboardItem(String name, String rank, Color badgeColor, {required bool isMe}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
