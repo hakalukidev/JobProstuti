@@ -11,7 +11,7 @@ class PricingSlider extends StatefulWidget {
 }
 
 class _PricingSliderState extends State<PricingSlider> {
-  final PageController _pageController = PageController(viewportFraction: 0.333); // Perfectly represents 3 cards at a time
+  PageController? _pageController;
   int _currentPage = 0;
   late Timer _timer;
   bool _isAutoPlaying = true;
@@ -77,8 +77,8 @@ class _PricingSliderState extends State<PricingSlider> {
       } else {
         _currentPage = 0;
       }
-      if (_pageController.hasClients) {
-        _pageController.animateToPage(
+      if (_pageController != null && _pageController!.hasClients) {
+        _pageController!.animateToPage(
           _currentPage,
           duration: const Duration(milliseconds: 1000),
           curve: Curves.easeInOutQuart,
@@ -90,16 +90,24 @@ class _PricingSliderState extends State<PricingSlider> {
   @override
   void dispose() {
     _timer.cancel();
-    _pageController.dispose();
+    _pageController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.sizeOf(context).width < 850;
+    final double viewportFraction = isMobile ? 0.8 : (MediaQuery.sizeOf(context).width < 1100 ? 0.5 : 0.333);
+
+    if (_pageController == null || _pageController!.viewportFraction != viewportFraction) {
+      _pageController?.dispose();
+      _pageController = PageController(viewportFraction: viewportFraction, initialPage: _currentPage);
+    }
+
     return Column(
       children: [
         SizedBox(
-          height: 680,
+          height: isMobile ? 650 : 680,
           child: PageView.builder(
             controller: _pageController,
             onPageChanged: (int page) {
@@ -115,7 +123,7 @@ class _PricingSliderState extends State<PricingSlider> {
                       _isAutoPlaying = false;
                       _currentPage = index;
                     });
-                    _pageController.animateToPage(
+                    _pageController?.animateToPage(
                       index,
                       duration: const Duration(milliseconds: 600),
                       curve: Curves.easeOutCubic,
@@ -153,7 +161,7 @@ class _PricingSliderState extends State<PricingSlider> {
             return GestureDetector(
               onTap: () {
                 setState(() => _isAutoPlaying = false);
-                _pageController.animateToPage(index, 
+                _pageController?.animateToPage(index,
                     duration: const Duration(milliseconds: 600), 
                     curve: Curves.easeInOut);
                 Future.delayed(const Duration(seconds: 10), () {

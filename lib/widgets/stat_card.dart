@@ -16,12 +16,17 @@ class _StatCardState extends State<StatCard> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.sizeOf(context).width < 850;
+    
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+        padding: EdgeInsets.symmetric(
+          vertical: isMobile ? 20 : 32, 
+          horizontal: isMobile ? 12 : 20
+        ),
         decoration: BoxDecoration(
           color: _isHovered ? Colors.white : const Color(0xFFF8FAFC),
           borderRadius: BorderRadius.circular(20),

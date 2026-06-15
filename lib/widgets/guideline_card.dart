@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
 
 class GuidelineCard extends StatefulWidget {
   final String title;
@@ -28,12 +27,15 @@ class _GuidelineCardState extends State<GuidelineCard> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.sizeOf(context).width < 850;
+
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         decoration: BoxDecoration(
+          // ... (keep gradient and other styles)
           // Premium Deep Forest Green Gradient to match app but with more depth
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -69,7 +71,7 @@ class _GuidelineCardState extends State<GuidelineCard> {
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
                   child: AspectRatio(
-                    aspectRatio: 1.8,
+                    aspectRatio: isMobile ? 2.2 : 1.8,
                     child: Container(
                       width: double.infinity,
                       decoration: const BoxDecoration(
@@ -254,7 +256,7 @@ class _GuidelineCardState extends State<GuidelineCard> {
 
             // ── Card Content Body ─────────────────────
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(isMobile ? 16 : 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -266,7 +268,10 @@ class _GuidelineCardState extends State<GuidelineCard> {
                       children: widget.tags
                           .map((tag) => Container(
                                 margin: const EdgeInsets.only(right: 8),
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isMobile ? 8 : 12, 
+                                  vertical: isMobile ? 4 : 6
+                                ),
                                 decoration: BoxDecoration(
                                   color: Colors.white.withValues(alpha: 0.05),
                                   borderRadius: BorderRadius.circular(6),
@@ -277,9 +282,9 @@ class _GuidelineCardState extends State<GuidelineCard> {
                                 ),
                                 child: Text(
                                   tag,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 11,
+                                    fontSize: isMobile ? 10 : 11,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -287,15 +292,15 @@ class _GuidelineCardState extends State<GuidelineCard> {
                           .toList(),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: isMobile ? 12 : 20),
 
                   Text(
                     widget.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
-                      fontSize: 20,
+                      fontSize: isMobile ? 18 : 20,
                       fontWeight: FontWeight.w900,
                       fontFamily: 'Hind Siliguri',
                       letterSpacing: 0.2,
@@ -309,12 +314,12 @@ class _GuidelineCardState extends State<GuidelineCard> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.7),
-                      fontSize: 14,
+                      fontSize: isMobile ? 13 : 14,
                       height: 1.6,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(height: 28),
+                  SizedBox(height: isMobile ? 16 : 28),
 
                   // Fixed "Guideline" Link
                   MouseRegion(
@@ -322,16 +327,16 @@ class _GuidelineCardState extends State<GuidelineCard> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
+                        Text(
                           'গাইডলাইন দেখুন',
                           style: TextStyle(
-                            color: Color(0xFF38BDF8),
-                            fontSize: 16,
+                            color: const Color(0xFF38BDF8),
+                            fontSize: isMobile ? 14 : 16,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward_rounded, size: 18, color: Color(0xFF38BDF8)),
+                        Icon(Icons.arrow_forward_rounded, size: isMobile ? 16 : 18, color: const Color(0xFF38BDF8)),
                       ],
                     ),
                   ),

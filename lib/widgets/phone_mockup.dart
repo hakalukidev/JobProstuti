@@ -7,65 +7,81 @@ class PhoneMockup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.sizeOf(context).width;
+    final bool isMobile = screenWidth < 850;
+    
+    // Scale factor for mobile
+    final double scale = isMobile ? (screenWidth / 600).clamp(0.5, 1.0) : 1.0;
+
     if (isCentered) {
-      return SizedBox(
-        width: 500, // Increased width for better spacing
-        height: 600, // Increased height to prevent overflow
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            // ── Back Phone (Subject List) ──
-            Positioned(
-              right: 20,
-              top: 80, // Lowered slightly
-              child: PhoneFrame(
-                width: 260,
-                height: 520, // Taller frame
-                child: _SubjectListView(),
-              ),
+      return Center(
+        child: Transform.scale(
+          scale: scale,
+          child: SizedBox(
+            width: 500,
+            height: 600,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // ── Back Phone (Subject List) ──
+                Positioned(
+                  right: 20,
+                  top: 80,
+                  child: PhoneFrame(
+                    width: 260,
+                    height: 520,
+                    child: _SubjectListView(),
+                  ),
+                ),
+                // ── Front Phone (Main Dashboard) ──
+                Positioned(
+                  left: 20,
+                  top: 0,
+                  child: PhoneFrame(
+                    width: 260,
+                    height: 520,
+                    child: _DashboardView(),
+                  ),
+                ),
+              ],
             ),
-            // ── Front Phone (Main Dashboard) ──
-            Positioned(
-              left: 20,
-              top: 0,
-              child: PhoneFrame(
-                width: 260,
-                height: 520, // Taller frame
-                child: _DashboardView(),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
 
-    return Container(
-      height: 600,
-      width: double.infinity,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // ── Right/Back Phone (Subject List) ──
-          Positioned(
-            right: 70,
-            top: 60,
-            child: PhoneFrame(
-              width: 280,
-              height: 550,
-              child: _SubjectListView(),
-            ),
+    return Center(
+      child: Transform.scale(
+        scale: scale,
+        child: Container(
+          height: 600,
+          width: 500,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // ── Right/Back Phone (Subject List) ──
+              Positioned(
+                right: 70,
+                top: 60,
+                child: PhoneFrame(
+                  width: 280,
+                  height: 550,
+                  child: _SubjectListView(),
+                ),
+              ),
+              // ── Left/Front Phone (Main Dashboard) ──
+              Positioned(
+                left: isMobile ? 20 : -100,
+                top: 0,
+                child: PhoneFrame(
+                  width: 280,
+                  height: 550,
+                  child: _DashboardView(),
+                ),
+              ),
+            ],
           ),
-          // ── Left/Front Phone (Main Dashboard) ──
-          Positioned(
-            left: -100,
-            top: 0,
-            child: PhoneFrame(
-              width: 280,
-              height: 550,
-              child: _DashboardView(),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
