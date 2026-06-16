@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../app/routes.dart';
 import '../../app/theme.dart';
 import '../../models/course_model.dart';
 import '../common/custom_button.dart';
@@ -39,13 +38,21 @@ class CourseCard extends StatelessWidget {
                     placeholder: (_, __) => Container(
                       color: AppColors.primarySurface,
                       child: const Center(
-                        child: Icon(Icons.menu_book, color: AppColors.primary, size: 40),
+                        child: Icon(
+                          Icons.menu_book,
+                          color: AppColors.primary,
+                          size: 40,
+                        ),
                       ),
                     ),
                     errorWidget: (_, __, ___) => Container(
                       color: AppColors.primarySurface,
                       child: const Center(
-                        child: Icon(Icons.menu_book, color: AppColors.primary, size: 40),
+                        child: Icon(
+                          Icons.menu_book,
+                          color: AppColors.primary,
+                          size: 40,
+                        ),
                       ),
                     ),
                   ),
@@ -65,7 +72,10 @@ class CourseCard extends StatelessWidget {
                       if (course.isLive) ...[
                         if (course.isFree) const SizedBox(width: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.error,
                             borderRadius: BorderRadius.circular(AppRadius.full),
@@ -101,7 +111,10 @@ class CourseCard extends StatelessWidget {
                     top: 10,
                     right: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.accent,
                         borderRadius: BorderRadius.circular(AppRadius.full),
@@ -169,33 +182,33 @@ class CourseCard extends StatelessWidget {
                     children: [
                       course.isFree
                           ? Text(
-                        'বিনামূল্যে',
-                        style: AppTextStyles.headlineSmall.copyWith(
-                          color: AppColors.success,
-                          fontSize: 16,
-                        ),
-                      )
-                          : Row(
-                        children: [
-                          Text(
-                            '৳${course.effectivePrice.toInt()}',
-                            style: AppTextStyles.headlineSmall.copyWith(
-                              color: AppColors.primary,
-                              fontSize: 16,
-                            ),
-                          ),
-                          if (course.hasDiscount) ...[
-                            const SizedBox(width: 6),
-                            Text(
-                              '৳${course.price.toInt()}',
-                              style: AppTextStyles.bodySmall.copyWith(
-                                decoration: TextDecoration.lineThrough,
-                                color: AppColors.mediumGray,
+                              'বিনামূল্যে',
+                              style: AppTextStyles.headlineSmall.copyWith(
+                                color: AppColors.success,
+                                fontSize: 16,
                               ),
+                            )
+                          : Row(
+                              children: [
+                                Text(
+                                  '৳${course.effectivePrice.toInt()}',
+                                  style: AppTextStyles.headlineSmall.copyWith(
+                                    color: AppColors.primary,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                if (course.hasDiscount) ...[
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '৳${course.price.toInt()}',
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      decoration: TextDecoration.lineThrough,
+                                      color: AppColors.mediumGray,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
-                          ],
-                        ],
-                      ),
                       if (!isCompact)
                         Text(
                           '★ ${course.rating.toStringAsFixed(1)}',
@@ -214,7 +227,9 @@ class CourseCard extends StatelessWidget {
                       child: LinearProgressIndicator(
                         value: course.progressPercent! / 100,
                         backgroundColor: AppColors.lightGray,
-                        valueColor: const AlwaysStoppedAnimation(AppColors.primary),
+                        valueColor: const AlwaysStoppedAnimation(
+                          AppColors.primary,
+                        ),
                         minHeight: 6,
                       ),
                     ),

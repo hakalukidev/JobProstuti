@@ -22,21 +22,15 @@ class JobProstutiApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('bn', 'BD'),
-        Locale('en', 'US'),
-      ],
+      supportedLocales: const [Locale('bn', 'BD'), Locale('en', 'US')],
       locale: const Locale('bn', 'BD'),
       builder: (context, child) {
         // Ensure text scale factor doesn't break layout
         final mediaQuery = MediaQuery.of(context);
+        final clamped = mediaQuery.textScaleFactor.clamp(0.8, 1.2).toDouble();
         return MediaQuery(
-          data: mediaQuery.copyWith(
-            textScaler: TextScaler.linear(
-              mediaQuery.textScaler.scale(1.0).clamp(0.8, 1.2),
-            ),
-          ),
-          child: child!,
+          data: mediaQuery.copyWith(textScaleFactor: clamped),
+          child: child ?? const SizedBox.shrink(),
         );
       },
     );

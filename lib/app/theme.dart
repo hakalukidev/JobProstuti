@@ -144,6 +144,14 @@ class AppTextStyles {
     height: 1.4,
   );
 
+  static TextStyle get labelSmall => const TextStyle(
+    fontFamily: banglaFont,
+    fontSize: 11,
+    fontWeight: FontWeight.w500,
+    color: AppColors.white,
+    height: 1.4,
+  );
+
   // Stats
   static TextStyle get statNumber => const TextStyle(
     fontFamily: banglaFont,

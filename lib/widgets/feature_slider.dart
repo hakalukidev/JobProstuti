@@ -760,6 +760,7 @@ class _MockPremiumPaper extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _MockQuestionBank extends StatelessWidget {
   const _MockQuestionBank();
   @override

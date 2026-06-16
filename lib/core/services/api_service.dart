@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
@@ -45,7 +46,7 @@ class ApiService {
       baseUrl: ApiConstants.apiBase,
       connectTimeout: ApiConstants.connectTimeout,
       receiveTimeout: ApiConstants.receiveTimeout,
-      sendTimeout: ApiConstants.sendTimeout,
+      sendTimeout: kIsWeb ? null : ApiConstants.sendTimeout,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

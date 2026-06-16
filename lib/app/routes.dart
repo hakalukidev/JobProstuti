@@ -7,6 +7,8 @@ import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
 import '../features/home/home_screen.dart';
+import '../features/blog/blog_list_screen.dart';
+import '../features/home/features_screen.dart';
 import '../features/courses/course_list_screen.dart';
 import '../features/courses/course_detail_screen.dart';
 import '../features/courses/enrollment_screen.dart';
@@ -23,6 +25,7 @@ import '../features/dashboard/bookmarks_screen.dart';
 import '../features/resources/resources_list_screen.dart';
 import '../features/resources/pdf_viewer_screen.dart';
 import '../features/pricing/pricing_screen.dart';
+import '../features/download_app/download_app_screen.dart';
 
 // Route names
 class AppRoutes {
@@ -30,6 +33,9 @@ class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const forgotPassword = '/forgot-password';
+  static const blog = '/blog';
+  static const features = '/features';
+  static const downloadApp = '/download-app';
   static const courses = '/courses';
   static const courseDetail = '/courses/:id';
   static const enrollment = '/courses/:id/enroll';
@@ -49,14 +55,15 @@ class AppRoutes {
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  final authState = ref.watch(authNotifierProvider);
 
   return GoRouter(
     initialLocation: AppRoutes.home,
     debugLogDiagnostics: false,
     redirect: (context, state) {
       final isAuthenticated = authState.value != null;
-      final isAuthRoute = state.matchedLocation == AppRoutes.login ||
+      final isAuthRoute =
+          state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.register ||
           state.matchedLocation == AppRoutes.forgotPassword;
 
@@ -70,7 +77,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ];
 
       final isProtected = protectedRoutes.any(
-            (r) => state.matchedLocation.startsWith(r.split(':').first),
+        (r) => state.matchedLocation.startsWith(r.split(':').first),
       );
 
       if (isProtected && !isAuthenticated) {
@@ -89,17 +96,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: AppRoutes.home,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const HomeScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const HomeScreen()),
           ),
           GoRoute(
             path: AppRoutes.courses,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const CourseListScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const CourseListScreen()),
           ),
           GoRoute(
             path: AppRoutes.courseDetail,
@@ -110,59 +113,58 @@ final routerProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(
             path: AppRoutes.liveExams,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const LiveExamsScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const LiveExamsScreen()),
           ),
           GoRoute(
             path: AppRoutes.questionBank,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const QuestionBankScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const QuestionBankScreen()),
           ),
           GoRoute(
             path: AppRoutes.resources,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const ResourcesListScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const ResourcesListScreen()),
           ),
           GoRoute(
             path: AppRoutes.pricing,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const PricingScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const PricingScreen()),
           ),
           GoRoute(
-            path: AppRoutes.dashboard,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const DashboardScreen(),
-            ),
+            path: AppRoutes.blog,
+            pageBuilder: (context, state) =>
+                _buildPage(state, const BlogListScreen()),
+          ),
+          GoRoute(
+            path: AppRoutes.features,
+            pageBuilder: (context, state) =>
+                _buildPage(state, const FeaturesScreen()),
+          ),
+          GoRoute(
+            path: AppRoutes.downloadApp,
+            pageBuilder: (context, state) =>
+                _buildPage(state, const DownloadAppScreen()),
           ),
           GoRoute(
             path: AppRoutes.profile,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const ProfileScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const ProfileScreen()),
+          ),
+          GoRoute(
+            path: AppRoutes.dashboard,
+            pageBuilder: (context, state) =>
+                _buildPage(state, const DashboardScreen()),
           ),
           GoRoute(
             path: AppRoutes.examHistory,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const ExamHistoryScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const ExamHistoryScreen()),
           ),
           GoRoute(
             path: AppRoutes.bookmarks,
-            pageBuilder: (context, state) => _buildPage(
-              state,
-              const BookmarksScreen(),
-            ),
+            pageBuilder: (context, state) =>
+                _buildPage(state, const BookmarksScreen()),
           ),
         ],
       ),
@@ -170,24 +172,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       // Full-screen routes (no shell)
       GoRoute(
         path: AppRoutes.login,
-        pageBuilder: (context, state) => _buildPage(
-          state,
-          const LoginScreen(),
-        ),
+        pageBuilder: (context, state) => _buildPage(state, const LoginScreen()),
       ),
       GoRoute(
         path: AppRoutes.register,
-        pageBuilder: (context, state) => _buildPage(
-          state,
-          const RegisterScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            _buildPage(state, const RegisterScreen()),
       ),
       GoRoute(
         path: AppRoutes.forgotPassword,
-        pageBuilder: (context, state) => _buildPage(
-          state,
-          const ForgotPasswordScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            _buildPage(state, const ForgotPasswordScreen()),
       ),
       GoRoute(
         path: AppRoutes.enrollment,
@@ -215,15 +210,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           final id = state.pathParameters['id']!;
           final extra = state.extra as Map<String, dynamic>?;
-          return _buildPage(state, ExamResultScreen(examId: id, resultData: extra));
+          return _buildPage(
+            state,
+            ExamResultScreen(examId: id, resultData: extra),
+          );
         },
       ),
       GoRoute(
         path: AppRoutes.modelTest,
-        pageBuilder: (context, state) => _buildPage(
-          state,
-          const ModelTestCreateScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            _buildPage(state, const ModelTestCreateScreen()),
       ),
       GoRoute(
         path: AppRoutes.pdfViewer,

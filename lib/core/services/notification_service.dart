@@ -8,53 +8,91 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationService {
-  static final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  static FirebaseMessaging? _messaging;
   static final Logger _logger = Logger();
 
-  static Future<void> initialize() async {
-    // Request permission
-    final settings = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      provisional: false,
-    );
+  static FirebaseMessaging _getInstance() {
+    if (kIsWeb) {
+      throw UnsupportedError('Firebase Messaging is not supported on web');
+    }
+    return _messaging ??= FirebaseMessaging.instance;
+  }
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      _logger.i('Notification permission granted');
+  static Future<void> initialize() async {
+    if (kIsWeb) {
+      _logger.w('Firebase Messaging not available on web');
+      return;
     }
 
-    // Set up background handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    try {
+      final messaging = _getInstance();
 
-    // Handle foreground messages
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      _logger.i('Foreground message: ${message.notification?.title}');
-      // Show local notification here
-    });
+      // Request permission
+      final settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+        provisional: false,
+      );
 
-    // Handle notification tap when app is in background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      _logger.i('Message opened app: ${message.data}');
-      // Navigate based on message.data
-    });
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        _logger.i('Notification permission granted');
+      }
 
-    // Get token
-    if (!kIsWeb) {
-      final token = await _messaging.getToken();
+      // Set up background handler
+      FirebaseMessaging.onBackgroundMessage(
+        _firebaseMessagingBackgroundHandler,
+      );
+
+      // Handle foreground messages
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        _logger.i('Foreground message: ${message.notification?.title}');
+        // Show local notification here
+      });
+
+      // Handle notification tap when app is in background
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        _logger.i('Message opened app: ${message.data}');
+        // Navigate based on message.data
+      });
+
+      // Get token
+      final token = await messaging.getToken();
       _logger.i('FCM Token: $token');
+    } catch (e, st) {
+      _logger.e(
+        'Failed to initialize notifications: $e',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
   static Future<String?> getToken() async {
-    return _messaging.getToken();
+    if (kIsWeb) return null;
+    try {
+      return await _getInstance().getToken();
+    } catch (e) {
+      _logger.e('Failed to get FCM token: $e');
+      return null;
+    }
   }
 
   static Future<void> subscribeToTopic(String topic) async {
-    await _messaging.subscribeToTopic(topic);
+    if (kIsWeb) return;
+    try {
+      await _getInstance().subscribeToTopic(topic);
+    } catch (e) {
+      _logger.e('Failed to subscribe to topic: $e');
+    }
   }
 
   static Future<void> unsubscribeFromTopic(String topic) async {
-    await _messaging.unsubscribeFromTopic(topic);
+    if (kIsWeb) return;
+    try {
+      await _getInstance().unsubscribeFromTopic(topic);
+    } catch (e) {
+      _logger.e('Failed to unsubscribe from topic: $e');
+    }
   }
 }

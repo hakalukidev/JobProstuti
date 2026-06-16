@@ -20,34 +20,79 @@ class _StatsSectionState extends ConsumerState<StatsSection> {
     final isMobile = ResponsiveLayout.isMobile(context);
 
     return Container(
-      color: AppColors.white,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.primarySurface.withValues(alpha: 0.3),
+            AppColors.white,
+            AppColors.primarySurface.withValues(alpha: 0.2),
+          ],
+        ),
+      ),
       padding: EdgeInsets.symmetric(
-        vertical: isMobile ? 40 : 64,
+        vertical: isMobile ? 48 : 72,
         horizontal: isMobile ? 20 : 40,
       ),
       child: MaxWidthBox(
         child: Column(
           children: [
+            // Accent bar
+            Container(
+              width: 48,
+              height: 4,
+              decoration: BoxDecoration(
+                gradient: AppColors.primaryGradient,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Eyebrow badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                'পরিসংখ্যান',
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
             Text(
               'আমাদের পরিসংখ্যান',
-              style: AppTextStyles.displaySmall,
+              style: AppTextStyles.displayMedium.copyWith(
+                color: AppColors.black,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               'লক্ষ লক্ষ শিক্ষার্থীর আস্থার প্ল্যাটফর্ম',
-              style: AppTextStyles.bodyLarge.copyWith(color: AppColors.mediumGray),
+              style: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.mediumGray,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
+
             statsAsync.when(
               data: (stats) => GridView.count(
                 crossAxisCount: isMobile ? 2 : 5,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: isMobile ? 1.3 : 1.1,
+                crossAxisSpacing: isMobile ? 12 : 20,
+                mainAxisSpacing: isMobile ? 12 : 20,
+                childAspectRatio: isMobile ? 1.3 : 1.0,
                 children: [
                   _AnimatedStatCard(
                     icon: Icons.people_alt_outlined,
@@ -142,34 +187,54 @@ class _AnimatedStatCardState extends State<_AnimatedStatCard>
     return ScaleTransition(
       scale: _scale,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(color: AppColors.lightGray),
-          boxShadow: AppShadows.subtle,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: AppColors.lightGray.withValues(alpha: 0.6),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: widget.iconColor.withValues(alpha: 0.06),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 52,
-              height: 52,
+              width: 56,
+              height: 56,
               decoration: BoxDecoration(
-                color: widget.iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    widget.iconColor.withValues(alpha: 0.12),
+                    widget.iconColor.withValues(alpha: 0.04),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
               ),
-              child: Icon(widget.icon, color: widget.iconColor, size: 26),
+              child: Icon(widget.icon, color: widget.iconColor, size: 28),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Text(
               widget.value,
-              style: AppTextStyles.statNumber.copyWith(fontSize: 24),
+              style: AppTextStyles.statNumber.copyWith(
+                fontSize: 26,
+                letterSpacing: -0.5,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               widget.label,
-              style: AppTextStyles.statLabel,
+              style: AppTextStyles.statLabel.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

@@ -145,8 +145,8 @@ class _DashboardView extends StatelessWidget {
           // Live Exam Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
+            children: [
+              const Text(
                 'লাইভ এক্সাম',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: Colors.black),
               ),
@@ -168,9 +168,9 @@ class _DashboardView extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: AppColors.secondary,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                   ),
                   child: const Row(
                     children: [
@@ -227,12 +227,12 @@ class _DashboardView extends StatelessWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
                   'সম্মিলিত রুটিন এবং আর্কাইভ',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.secondary),
                 ),
-                Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+                const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
               ],
             ),
           ),
@@ -250,13 +250,13 @@ class _DashboardView extends StatelessWidget {
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         'বিষয়ভিত্তিক পরীক্ষা',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.secondary),
                       ),
-                      SizedBox(height: 4),
-                      Text(
+                      const SizedBox(height: 4),
+                      const Text(
                         'বাংলা, ইংরেজি, গণিত, ভূগোল সহ আরও ১৩ টি বিষয়ে পরীক্ষা দিন।',
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
@@ -264,7 +264,7 @@ class _DashboardView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(Icons.school, size: 40, color: AppColors.secondary),
+                Icon(Icons.school, size: 40, color: AppColors.secondary),
               ],
             ),
           ),
@@ -372,7 +372,7 @@ class _SubjectItem extends StatelessWidget {
             height: 32,
             alignment: Alignment.center,
             decoration: BoxDecoration(color: AppColors.background, borderRadius: BorderRadius.circular(4)),
-            child: Text(code, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary)),
+            child: Text(code, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary)),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -392,7 +392,7 @@ class _SubjectItem extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: progress,
                     backgroundColor: Colors.grey.shade100,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondary),
                     minHeight: 4,
                   ),
                 ),
