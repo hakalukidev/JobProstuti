@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
 import 'pricing_card.dart';
 
 class PricingSlider extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import '../app/theme.dart';
 import 'phone_mockup.dart';
 
 class FeatureSlider extends StatefulWidget {
@@ -166,7 +166,7 @@ class _FeatureSliderState extends State<FeatureSlider> {
                   height: 8,
                   width: _currentPage == index ? 24 : 8,
                   decoration: BoxDecoration(
-                    color: _currentPage == index ? AppColors.secondary : Colors.grey.shade300,
+                    color: _currentPage == index ? AppColors.accent : Colors.grey.shade300,
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -212,7 +212,7 @@ class _FeatureSlideCardState extends State<_FeatureSlideCard> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: _isHovered || widget.isActive ? AppColors.secondary : const Color(0xFFE2E8F0),
+            color: _isHovered || widget.isActive ? AppColors.accent : const Color(0xFFE2E8F0),
             width: _isHovered || widget.isActive ? 2.5 : 1,
           ),
           boxShadow: [

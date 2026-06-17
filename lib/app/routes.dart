@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/providers/auth_provider.dart';
-import '../features/auth/login_screen.dart';
-import '../features/auth/register_screen.dart';
+import '../screens/login_screen.dart';
+import '../screens/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
-import '../features/home/home_screen.dart';
+import '../screens/home_screen.dart';
 import '../features/courses/course_list_screen.dart';
 import '../features/courses/course_detail_screen.dart';
 import '../features/courses/enrollment_screen.dart';

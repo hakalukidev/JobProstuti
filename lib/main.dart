@@ -4,53 +4,72 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 import 'app/app.dart';
-import 'core/services/notification_service.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+    // Initialize Firebase
+    try {
+      await Firebase.initializeApp();
+    } catch (e) {
+      debugPrint('Firebase init error: $e');
+    }
 
-  // Initialize Firebase
-  await Firebase.initializeApp();
+    // Initialize Hive
+    try {
+      await Hive.initFlutter();
+      await Hive.openBox('questions_cache');
+      await Hive.openBox('exams_cache');
+      await Hive.openBox('user_cache');
+    } catch (e) {
+      debugPrint('Hive init error: $e');
+    }
 
-  // Initialize Hive for offline storage
-  await Hive.initFlutter();
-  await Hive.openBox('questions_cache');
-  await Hive.openBox('exams_cache');
-  await Hive.openBox('user_cache');
+    // Initialize SharedPreferences
+    SharedPreferences? prefs;
+    try {
+      prefs = await SharedPreferences.getInstance();
+    } catch (e) {
+      debugPrint('Prefs init error: $e');
+    }
 
-  // Initialize SharedPreferences
-  final prefs = await SharedPreferences.getInstance();
+    // ✅ NotificationService এর initialization comment করে দাও:
+    /*
+    try {
+      if (!kIsWeb) {
+        await NotificationService.initialize();
+      }
+    } catch (e) {
+      debugPrint('Notification init error: $e');
+    }
+    */
 
-  // Initialize Notifications
-  await NotificationService.initialize();
+    if (!kIsWeb) {
+      SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+        ),
+      );
+    }
 
-  // System UI overlay style
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ),
-  );
-
-  runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(prefs),
-      ],
-      child: const JobProstutiApp(),
-    ),
-  );
+    runApp(
+      ProviderScope(
+        overrides: [
+          if (prefs != null) sharedPreferencesProvider.overrideWithValue(prefs),
+        ],
+        child: const JobProstutiApp(),
+      ),
+    );
+  } catch (e, stack) {
+    debugPrint('Fatal error in main: $e');
+    debugPrint(stack.toString());
+    runApp(MaterialApp(home: Scaffold(body: Center(child: Text('Error: $e')))));
+  }
 }
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {

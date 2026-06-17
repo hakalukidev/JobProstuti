@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import '../app/theme.dart';
 
 class StatCard extends StatefulWidget {
   final Widget icon;
@@ -33,14 +33,14 @@ class _StatCardState extends State<StatCard> {
           boxShadow: _isHovered 
             ? [
                 BoxShadow(
-                  color: AppColors.secondary.withValues(alpha: 0.1),
+                  color: AppColors.accent.withOpacity(0.1),
                   blurRadius: 30,
                   offset: const Offset(0, 15),
                 )
               ]
             : [],
           border: Border.all(
-            color: _isHovered ? AppColors.secondary : Colors.transparent,
+            color: _isHovered ? AppColors.accent : Colors.transparent,
             width: 2.5, // Increased border width for better visibility
           ),
         ),

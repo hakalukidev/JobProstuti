@@ -28,6 +28,13 @@ class JobProstutiApp extends ConsumerWidget {
       ],
       locale: const Locale('bn', 'BD'),
       builder: (context, child) {
+        if (child == null) {
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
         // Ensure text scale factor doesn't break layout
         final mediaQuery = MediaQuery.of(context);
         return MediaQuery(
@@ -36,7 +43,7 @@ class JobProstutiApp extends ConsumerWidget {
               mediaQuery.textScaler.scale(1.0).clamp(0.8, 1.2),
             ),
           ),
-          child: child!,
+          child: child,
         );
       },
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import '../app/theme.dart';
 
 class PhoneMockup extends StatelessWidget {
   final bool isCentered;
@@ -152,7 +152,7 @@ class _DashboardView extends StatelessWidget {
               ),
               Text(
                 'সবগুলো',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.secondary),
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.accent),
               ),
             ],
           ),
@@ -169,7 +169,7 @@ class _DashboardView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: const BoxDecoration(
-                    color: AppColors.secondary,
+                    color: AppColors.accent,
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                   ),
                   child: const Row(
@@ -230,7 +230,7 @@ class _DashboardView extends StatelessWidget {
               children: const [
                 Text(
                   'সম্মিলিত রুটিন এবং আর্কাইভ',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.secondary),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.accent),
                 ),
                 Icon(Icons.chevron_right, size: 16, color: Colors.grey),
               ],
@@ -253,7 +253,7 @@ class _DashboardView extends StatelessWidget {
                     children: const [
                       Text(
                         'বিষয়ভিত্তিক পরীক্ষা',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.secondary),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: AppColors.accent),
                       ),
                       SizedBox(height: 4),
                       Text(
@@ -264,7 +264,7 @@ class _DashboardView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(Icons.school, size: 40, color: AppColors.secondary),
+                const Icon(Icons.school, size: 40, color: AppColors.accent),
               ],
             ),
           ),
@@ -392,7 +392,7 @@ class _SubjectItem extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: progress,
                     backgroundColor: Colors.grey.shade100,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.secondary),
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accent),
                     minHeight: 4,
                   ),
                 ),

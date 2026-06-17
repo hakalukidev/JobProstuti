@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/responsive.dart';
 import 'login_screen.dart';
-import '../utils/app_colors.dart';
+import '../app/theme.dart';
 import '../widgets/section_badge.dart';
 import '../widgets/play_store_button.dart';
 import '../widgets/call_button.dart';
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildDrawerItem('ডাউনলোড অ্যাপ', Icons.download_rounded, () => _scrollToSection(_ctaOffset)),
                 const Divider(color: Colors.white10, height: 40),
                 ListTile(
-                  leading: const Icon(Icons.login_rounded, color: AppColors.secondary),
+                  leading: const Icon(Icons.login_rounded, color: AppColors.accent),
                   title: const Text('সাইন ইন / আপ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   onTap: () {
                     Navigator.pop(context);
@@ -154,23 +154,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // ── Sign In Button ─────────────────────────────────────────
                 SizedBox(
-                  height: 40,
+                  height: 44,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.secondary,
+                      backgroundColor: AppColors.accent,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       elevation: 0,
                     ),
                     child: Text(
                       isMobile ? 'লগইন' : 'সাইন ইন / আপ',
                       style: const TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -247,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            const Icon(Icons.star, color: AppColors.accent, size: 20),
+                            const Icon(Icons.star, color: AppColors.warning, size: 20),
                             const SizedBox(width: 8),
                             const Text(
                               '৪.৩',
@@ -337,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         childAspectRatio: isMobile ? 1.5 : 1.1,
                         children: [
                           StatCard(
-                            icon: Icon(Icons.school_rounded, color: AppColors.secondary, size: 36),
+                            icon: Icon(Icons.school_rounded, color: AppColors.accent, size: 36),
                             number: '২০+',
                             label: 'লাইভ কোর্স',
                           ),
@@ -352,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             label: 'টপিক',
                           ),
                           StatCard(
-                            icon: Icon(Icons.download_for_offline_rounded, color: AppColors.secondary, size: 36),
+                            icon: Icon(Icons.download_for_offline_rounded, color: AppColors.accent, size: 36),
                             number: '৯ লাখ+',
                             label: 'ডাউনলোড',
                           ),
@@ -761,14 +762,14 @@ class _HomeScreenState extends State<HomeScreen> {
           // ── FAQ Section ───────────────────────────────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: AppColors.lightBg,
+              color: AppColors.background,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 48),
               child: Column(
                 children: [
                   const SectionBadge(title: 'সচরাচর জিজ্ঞাসা'),
                   const Text(
                     'সচরাচর জিজ্ঞাসাসমূহ',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.black),
                   ),
                   const SizedBox(height: 32),
                   const FaqItem(
@@ -1134,7 +1135,7 @@ class _JobProstutiLogo extends StatelessWidget {
           ),
           child: const Icon(
             Icons.menu_book_rounded,
-            color: AppColors.secondary,
+            color: AppColors.accent,
             size: 24,
           ),
         ),
@@ -1156,7 +1157,7 @@ class _JobProstutiLogo extends StatelessWidget {
             Text(
               'LEARN & GROW',
               style: TextStyle(
-                color: AppColors.secondary,
+                color: AppColors.accent,
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.5,

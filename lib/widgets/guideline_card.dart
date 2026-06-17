@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../app/theme.dart';
 
 class GuidelineCard extends StatefulWidget {
   final String title;

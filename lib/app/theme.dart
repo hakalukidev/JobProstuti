@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary brand colors (green like bcsprostuti.com)
-  static const Color primary = Color(0xFF1B8E3D);
-  static const Color primaryDark = Color(0xFF146B2E);
-  static const Color primaryLight = Color(0xFF4CAF70);
-  static const Color primarySurface = Color(0xFFE8F5ED);
+  // Deep Forest Green Theme (Matching the image)
+  static const Color primary = Color(0xFF1B8E3D); // Vibrant Green for buttons
+  static const Color primaryDark = Color(0xFF022C22); // Deep Dark background
+  static const Color primaryLight = Color(0xFF22C55E);
+  static const Color primarySurface = Color(0xFF05211A); // Slightly lighter green
 
   // Accent
-  static const Color accent = Color(0xFFFF6B35);
-  static const Color accentLight = Color(0xFFFFF0EB);
+  static const Color accent = Color(0xFF1B8E3D); // Matches the CTA button
+  static const Color secondary = accent;
+  static const Color accentLight = Color(0xFFE8F5ED);
+  static const Color lightBg = Color(0xFFF8F9FA);
+  static const Color textDark = Color(0xFF0F172A);
 
   // Neutrals
-  static const Color black = Color(0xFF1A1A2E);
-  static const Color darkGray = Color(0xFF2D2D2D);
-  static const Color mediumGray = Color(0xFF6B7280);
-  static const Color lightGray = Color(0xFFE5E7EB);
-  static const Color background = Color(0xFFF8F9FA);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color black = Color(0xFF000000);
+  static const Color background = Color(0xFFF8F9FA);
   static const Color cardBg = Color(0xFFFFFFFF);
+  static const Color mediumGray = Color(0xFF64748B);
+  static const Color lightGray = Color(0xFFE2E8F0);
+  static const Color darkGray = Color(0xFF1E293B);
 
   // Semantic
   static const Color success = Color(0xFF22C55E);
   static const Color error = Color(0xFFEF4444);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color info = Color(0xFF3B82F6);
+  static const Color warning = Color(0xFFFBBF24); // Star/Amber color
+  static const Color info = Color(0xFF0EA5E9);
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
@@ -326,12 +329,15 @@ class AppTheme {
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return AppColors.primary;
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary;
+          }
           return AppColors.mediumGray;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return AppColors.primaryLight;
+          }
           return AppColors.lightGray;
         }),
       ),

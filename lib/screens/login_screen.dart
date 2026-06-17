@@ -1,6 +1,10 @@
+// lib/screens/login_screen.dart
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../app/theme.dart';
 import 'register_screen.dart';
+import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +18,75 @@ class _LoginScreenState extends State<LoginScreen> {
   final _identifierController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      print('🟢 Google Sign-In started');
+
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        print('🟡 User cancelled sign-in');
+        setState(() { _isLoading = false; });
+        return;
+      }
+
+      print('🟢 User: ${googleUser.email}');
+
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      print('🟢 Firebase signing in...');
+      final UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      print('🟢 Login successful! User: ${userCredential.user?.email}');
+
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      print('🔴 Firebase Auth Error: ${e.code} - ${e.message}');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Firebase Error: ${e.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('🔴 General Error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google লগইন ব্যর্থ হয়েছে: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -58,7 +131,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 32,
                             fontWeight: FontWeight.w900,
                             color: Color(0xFF022C22),
-                            fontFamily: 'Hind Siliguri',
                           ),
                         ),
                         SizedBox(height: 8),
@@ -73,8 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  
-                  // Identifier Field
+
                   const Text('ইমেইল বা নাম', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E293B))),
                   const SizedBox(height: 8),
                   TextFormField(
@@ -90,7 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Password Field
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -120,28 +190,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Login Button
                   SizedBox(
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: _isLoading
+                          ? null
+                          : () {
                         if (_formKey.currentState!.validate()) {
-                          // Handle Login Logic
+                          // Email Login
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
+                        backgroundColor: AppColors.accent,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
                       ),
-                      child: const Text('লগইন করুন', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: _isLoading
+                          ? const SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                      )
+                          : const Text('লগইন করুন', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(height: 24),
 
-                  // Divider
                   const Row(
                     children: [
                       Expanded(child: Divider()),
@@ -151,29 +227,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Social Logins
+                  // ✅ Google Login Button (সঠিক UI)
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
+                      // Google Button
+                      SizedBox(
+                        width: 140,
+                        height: 48,
                         child: OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.g_mobiledata_rounded, size: 24),
-                          label: const Text('Google', style: TextStyle(color: Colors.black87)),
+                          onPressed: _isLoading ? null : _signInWithGoogle,
+                          icon: _isLoading
+                              ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                              : const Icon(Icons.g_mobiledata_rounded, size: 20),
+                          label: Text(_isLoading ? '' : 'Google'),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             side: const BorderSide(color: Color(0xFFE2E8F0)),
                           ),
                         ),
                       ),
                       const SizedBox(width: 16),
-                      Expanded(
+                      // Facebook Button
+                      SizedBox(
+                        width: 140,
+                        height: 48,
                         child: OutlinedButton.icon(
                           onPressed: () {},
                           icon: const Icon(Icons.facebook_rounded, size: 18, color: Color(0xFF1877F2)),
-                          label: const Text('Facebook', style: TextStyle(color: Colors.black87)),
+                          label: const Text('Facebook'),
                           style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             side: const BorderSide(color: Color(0xFFE2E8F0)),
                           ),
@@ -183,7 +270,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Footer
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
                           },
-                          child: const Text('নতুন অ্যাকাউন্ট তৈরি করুন', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold)),
+                          child: Text('নতুন অ্যাকাউন্ট তৈরি করুন', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218238403987",
+    "project_id": "job-prostuti-7e8f2",
+    "storage_bucket": "job-prostuti-7e8f2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218238403987:android:28211044fb529a65f61466",
+        "android_client_info": {
+          "package_name": "com.hakaluki.jobprostuti"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAR6oMS423Cdmvz6R5WIebbQQuyNID4whI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

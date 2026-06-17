@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/app_colors.dart';
+import '../app/theme.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -166,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.secondary,
+                        backgroundColor: AppColors.accent,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
@@ -184,7 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const Text('ইতিমধ্যেই অ্যাকাউন্ট আছে? ', style: TextStyle(color: Color(0xFF64748B))),
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('লগইন করুন', style: TextStyle(color: AppColors.secondary, fontWeight: FontWeight.bold)),
+                          child: Text('লগইন করুন', style: TextStyle(color: AppColors.accent, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),

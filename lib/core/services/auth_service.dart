@@ -25,7 +25,7 @@ class AuthResult {
 class AuthService {
   final ApiService _api;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
   final Logger _logger = Logger();
 
   AuthService(this._api);
