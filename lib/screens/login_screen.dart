@@ -1,9 +1,13 @@
 // lib/screens/login_screen.dart
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_sign_in_web/google_sign_in_web.dart' as gsi_web;
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../app/theme.dart';
 import 'register_screen.dart';
+import '../features/dashboard/dashboard_screen.dart';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -27,8 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       print('🟢 Google Sign-In started');
+      final String webClientId = dotenv.env['WEB_CLIENT_ID'] ?? '';
 
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId: kIsWeb ? webClientId : null,
+      );
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -56,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {

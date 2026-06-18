@@ -398,16 +398,24 @@ class _AuthInterceptor extends Interceptor {
   _AuthInterceptor(this._storage, this._dio, this._logger);
 
   @override
-  Future<void> onRequest(
-      RequestOptions options,
-      RequestInterceptorHandler handler,
-      ) async {
-    final token = await _storage.read(key: _tokenKey);
-    if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
-    }
+ @override
+Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+    ) async {
+  // Check if the request explicitly asks to skip authorization
+  if (options.headers['skipAuth'] == true) {
+    options.headers.remove('skipAuth'); // Clean up the helper header
     handler.next(options);
+    return;
   }
+
+  final token = await _storage.read(key: _tokenKey);
+  if (token != null) {
+    options.headers['Authorization'] = 'Bearer $token';
+  }
+  handler.next(options);
+}
 
   @override
   Future<void> onError(
@@ -437,10 +445,11 @@ class _AuthInterceptor extends Interceptor {
         final retryResponse = await _dio.fetch(err.requestOptions);
         handler.resolve(retryResponse);
       } catch (e) {
-        _logger.e('Token refresh failed: $e');
-        await _storage.deleteAll();
-        handler.next(err);
-      } finally {
+  _logger.e('Token refresh failed: $e');
+  await _storage.delete(key: _tokenKey);
+  await _storage.delete(key: _refreshTokenKey);
+  handler.next(err);
+}finally {
         _isRefreshing = false;
       }
     } else {

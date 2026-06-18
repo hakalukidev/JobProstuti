@@ -67,7 +67,7 @@ class AuthService {
 
   // Google Sign-In
   Future<AuthResult> loginWithGoogle() async {
-    final googleUser = await (_googleSignIn as dynamic).signIn();
+    final googleUser = await _googleSignIn.signIn();
     if (googleUser == null)
       throw const ApiException(message: 'Google সাইন-ইন বাতিল হয়েছে।');
 

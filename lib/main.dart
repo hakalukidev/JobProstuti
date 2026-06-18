@@ -5,19 +5,30 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app/app.dart';
 
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-
-    // Initialize Firebase
     try {
-      await Firebase.initializeApp();
+      await dotenv.load(fileName: ".env");
+      print('WEB_CLIENT_ID: ${dotenv.env['WEB_CLIENT_ID']}');
     } catch (e) {
-      debugPrint('Firebase init error: $e');
+      debugPrint('Dotenv initialization error: $e');
     }
+    try {
+  // 2. ✅ Pass your options object to make Web Authentication work flawlessly
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform, // 🔴 THE SILENT CRASH HAPPENS HERE
+  );
+} catch (e) {
+  debugPrint('Firebase init error: $e'); // 📝 It catches the error and hides it from your UI!
+}
+
+
 
     // Initialize Hive
     try {
@@ -56,7 +67,7 @@ void main() async {
         ),
       );
     }
-
+   
     runApp(
       ProviderScope(
         overrides: [
